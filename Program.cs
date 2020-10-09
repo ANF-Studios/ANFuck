@@ -1,170 +1,150 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
 
-namespace BrainFuckInterpreter
+namespace BFI
 {
-    class Program
+    sealed class Program
     {
+        public static string code;
+        public static short[] memory;
+        public static int ptr;
+        public static int codePos;
+        public static Stack<int> stack;
+        public static Dictionary<int, int> branchTable;
+        public const int MEMORY_CELLS = 65536;
+
         private static void Main()
         {
             Initialize();
-            MainCode();
+            Program p = new Program();
+            p.Run();
+            Console.ReadKey(true);
         }
 
         private static void Initialize()
         {
+            Console.OutputEncoding = Encoding.ASCII;
             Console.Title = "BrainFuck Interpreter";
         }
-
-        private static void MainCode()
+        
+        public void Run()
         {
-            Console.WriteLine("Enter Command Buffer: ");
-            string commandBuffer = Console.ReadLine();
-
-            int[] memory = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-            int memoryPointer = 0;
-            Console.ForegroundColor = ConsoleColor.Blue;
-
-            for (int i = 0; i < commandBuffer.Length; ++i)
+            var source = new FileInfo("Program.bf");
+            if (!source.Exists)
             {
-                switch (commandBuffer[i])
-                {
-                    case ',':
-                        try
-                        {
-                            Console.Clear();
-                            Console.Write("Provide input (int): ");
-                            string input = Console.ReadLine();
-                            memory[memoryPointer] = System.Convert.ToInt32(input);
-                        }
-
-                        catch (Exception ex)
-                        {
-                            Console.Beep();
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("An exception has occured and this step is skipped!\n" + ex.Message);
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.ReadKey(true);
-                        }
-                        break;
-
-                    case '.':
-                        Console.WriteLine(memory[memoryPointer]);
-                        break;
-
-                    case '<':
-                        try
-                        {
-                            memoryPointer--;
-                        }
-
-                        catch (Exception ex)
-                        {
-                            Console.Beep();
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("An exception has occured and this step is skipped!\n" + ex.Message);
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.ReadKey(true);
-                        }
-
-                        break;
-
-                    case '>':
-                        memoryPointer++;
-                        break;
-
-                    case '+':
-                        memory[memoryPointer] += 1;
-                        break;
-
-                    case '-':
-                        memory[memoryPointer] -= 1;
-                        break;
-
-                    case '[':
-                        if (memory[memoryPointer] == 0)
-                        {
-                            int skip = 0;
-                            int ptr = i + 1;
-                            while (commandBuffer[ptr] != ']' || skip > 0)
-                            {
-                                if (commandBuffer[ptr] == '[')
-                                {
-                                    skip += 1;
-                                }
-                                else if (commandBuffer[ptr] == ']')
-                                {
-                                    skip -= 1;
-                                }
-                                ptr += 1;
-                                i = ptr;
-                            }
-                        }
-                        break;
-
-                    case ']':
-                        if (memory[memoryPointer] != 0)
-                        {
-                            int skip = 0;
-                            int ptr = i - 1;
-                            while (commandBuffer[ptr] != '[' || skip > 0)
-                            {
-                                if (commandBuffer[ptr] == ']')
-                                {
-                                    skip += 1;
-                                }
-                                else if (commandBuffer[ptr] == '[')
-                                {
-                                    skip -= 1;
-                                }
-                                ptr -= 1;
-                                i = ptr;
-                            }
-                        }
-                        break;
-                }
-
-                Console.Clear();
-
-                for (int j = 0; j < memory.Length; ++j)
-                {
-                    if (j == memoryPointer)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    }
-                    Console.Write(memory[j] + " ");
-                }
-                Console.WriteLine("\n");
-
-                for (int j = 0; j < commandBuffer.Length; ++j)
-                {
-                    if (j == i)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    }
-                    Console.Write(commandBuffer[j] + " ");
-                }
-
-                System.Threading.Thread.Sleep(1000);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] This file doesn't exists");
             }
+            Parse(source);
+        }
+        
+        static void Parse(FileInfo f)
+        {
+            memory = new short[MEMORY_CELLS];
+            ptr = 0;
+            codePos = 0;
+            stack = new Stack<int>();
+            branchTable = new Dictionary<int, int>();
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("\nPress any key to continue or q to close...");
-            var Input = Console.ReadKey();
-            if (Input.Key == ConsoleKey.Q) Environment.Exit(0);
-            else
+            try
             {
-                Console.Clear();
-                MainCode();
+                using (StreamReader r = f.OpenText())
+                    code = r.ReadToEnd();
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(e);
+            }
+            
+            for (int i = 0; i < code.Length; i++)
+            {
+                switch (code[i])
+                {
+                    case '[':
+                        stack.Push(i);
+                        break;
+                    case ']':
+                        if (stack.Count == 0)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("[ERROR] Missing opening chevron \"[\"");
+                            Console.ResetColor();
+                        }
+                        else
+                        {
+                            var openingBracketPosition = stack.Pop();
+                            branchTable.Add(openingBracketPosition, i + 1);
+                            branchTable.Add(i, openingBracketPosition + 1);
+                        }
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+            
+            if (stack.Count > 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[ERROR] Missing closing chevron \"]\"");
+                return;
+            }
+            while (codePos < code.Length)
+            {
+                switch (code[codePos])
+                {
+                    case '+':
+                        memory[ptr]++;
+                        codePos++;
+                        break;
+                    case '-':
+                        memory[ptr]--;
+                        codePos++;
+                        break;
+                    case '>':
+                        ptr++;
+                        if (ptr == MEMORY_CELLS)
+                            ptr = 0;
+                        codePos++;
+                        break;
+                    case '<':
+                        ptr--;
+                        if (ptr == -1)
+                            ptr = MEMORY_CELLS - 1;
+                        codePos++;
+                        break;
+                    case '.':
+                        Console.Write(Convert.ToChar(memory[ptr]));
+                        codePos++;
+                        break;
+                    case ',':
+                        var r = (short)Console.Read();
+                        if (r != 13)
+                        {
+                            if (r != -1)
+                                memory[ptr] = r;
+                            codePos++;
+                        }
+                        break;
+                    case '[':
+                        if (memory[ptr] == 0)
+                            codePos = branchTable[codePos];
+                        else
+                            codePos++;
+                        break;
+                    case ']':
+                        if (memory[ptr] == 0)
+                            codePos++;
+                        else
+                            codePos = branchTable[codePos];
+                        break;
+                    default:
+                        codePos++;
+                        break;
+                }
             }
         }
     }
