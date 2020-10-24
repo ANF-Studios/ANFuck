@@ -35,7 +35,10 @@ namespace BFI
             if (!source.Exists)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] This file doesn't exists");
+                Console.Write("[ERROR] This file \"Program.bf\" doesn't exists, press any key to create the file...");
+                Console.ResetColor();
+                Console.ReadKey(true);
+                File.AppendAllText("Program.bf", "+.");
             }
             Parse(source);
         }
@@ -56,6 +59,7 @@ namespace BFI
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine("There was an error reading the file!");
                 Console.WriteLine(e);
             }
             
@@ -70,8 +74,10 @@ namespace BFI
                         if (stack.Count == 0)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("[ERROR] Missing opening chevron \"[\"");
-                            Console.ResetColor();
+                            Console.Write("[ERROR] Missing opening chevron \"[\"");
+                            Console.ReadKey(true);
+                            int exitCode = Environment.ExitCode;
+                            Environment.Exit(exitCode);
                         }
                         else
                         {
@@ -89,8 +95,10 @@ namespace BFI
             if (stack.Count > 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[ERROR] Missing closing chevron \"]\"");
-                return;
+                Console.Write("[ERROR] Missing closing chevron \"]\"");
+                Console.ReadKey(true);
+                int exitCode = Environment.ExitCode;
+                Environment.Exit(exitCode);
             }
             while (codePos < code.Length)
             {
@@ -117,8 +125,32 @@ namespace BFI
                         codePos++;
                         break;
                     case '.':
+                    try
+                    {
                         Console.Write(Convert.ToChar(memory[ptr]));
                         codePos++;
+                    }
+                    
+                    catch (OverflowException)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Error.Write("[ERROR] The output was too much to handle\nPress any key to continue...");
+                        Console.ReadKey(true);
+                        int exitCode = Environment.ExitCode;
+                        Environment.Exit(exitCode);
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("[ERROR] " + ex.Message + "\nPress any key to continue...");
+                        Console.ReadKey(true);
+                        int exitCode = Environment.ExitCode;
+                        Environment.Exit(exitCode);
+                    }
+                        
                         break;
                     case ',':
                         var r = (short)Console.Read();
@@ -139,7 +171,20 @@ namespace BFI
                         if (memory[ptr] == 0)
                             codePos++;
                         else
+                        try
+                        {
                             codePos = branchTable[codePos];
+                        }
+
+                        catch (Exception ex)
+                        {
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write("[ERROR] " + ex.Message + "\nPress any key to continue...");
+                            Console.ReadKey(true);
+                            int exitCode = Environment.ExitCode;
+                            Environment.Exit(exitCode);
+                        }
                         break;
                     default:
                         codePos++;
