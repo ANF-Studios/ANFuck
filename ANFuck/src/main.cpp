@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-void ParsePath(const std::string& pathToFile);
+void GetAndRunCode(const std::string& pathToFile);
 
 const char Version[6] = "0.1.0";
 const char* HelpMessage = R"(Usage: anfuck [version] [help] [path/to/brainfuck/code]
