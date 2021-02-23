@@ -1,5 +1,5 @@
 # BrainFuckInterpreter
- A simple Brainfuck interpreter written in C#. This respiratory uses [The Unlicense](https://unlicense.org/).
+ A simple Brainfuck interpreter written in C#. This repository is licensed by [The Unlicense](https://unlicense.org/).
 ### Info
 This is a simple brainfuck interpreter that I created (of course following taking some tutorials and some code from others 👀) which is a fun little project. I actually want to create a more advanced programming language. I want to thank [Oliver Booth](https://github.com/oliverbooth) for backing me up.
 
