@@ -14,9 +14,7 @@ namespace ANFuck {
 		if (!file.is_open())
 			throw std::runtime_error("Failed to open '" + filename + "'.");
 
-		while (file.good()) {
-			commands.push_back(file.get());
-		}
+		while (file.good()) commands.push_back(file.get());
 
 		return commands;
 	}
