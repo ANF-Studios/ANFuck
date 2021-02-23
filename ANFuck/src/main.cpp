@@ -22,9 +22,10 @@ int main(int argc, char* argv[]) {
 		<< typeid("help").name()
 		<< std::endl;
 #endif
-	if (argc != 2 || (std::string)argv[1] == (std::string)"help") std::cout << HelpMessage << std::endl;
-	else if (argv[1] == "version") std::cout << Version << std::endl;
-	else if (argv[1] == "path/to/brainfuck/code") std::cout << "You have to enter the actual path of your code";
+	const std::string helpType = (std::string)argv[1];
+	if (argc != 2 || helpType == (std::string)"help") std::cout << HelpMessage;
+	else if (helpType == (std::string)"version") std::cout << Version;
+	else if (helpType == (std::string)"path/to/brainfuck/code") std::cout << "You have to enter the actual path of your code";
 	else ParsePath((std::string)argv[1]);
 
 #ifdef ANFUCK_DEBUG
