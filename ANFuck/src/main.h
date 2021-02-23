@@ -32,6 +32,7 @@ namespace ANFuck {
 		{
 			switch (*instructionPtr)
 			{
+				// These are basic brainfuck commands
 				case '<':
 				{
 					dataPtr--;
@@ -105,8 +106,12 @@ namespace ANFuck {
 
 					break;
 				}
+				// From here, starts all added commands
+				// which make ANFuck
 				case '_':
 				{
+					// Change the current value's number
+					// to something random.
 					*dataPtr = rand() % 126 + 1;
 				}
 				default:
