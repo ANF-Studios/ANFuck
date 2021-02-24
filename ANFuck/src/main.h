@@ -113,6 +113,7 @@ namespace ANFuck {
 					// Change the current value's number
 					// to something random.
 					*dataPtr = rand() % 126 + 1;
+					break;
 				}
 				default:
 					break;
