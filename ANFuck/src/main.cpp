@@ -24,11 +24,14 @@ int main(int argc, char* argv[]) {
 		<< typeid("help").name()
 		<< std::endl;
 #endif
-	const std::string helpType = (std::string)argv[1];
-	if (argc != 2 || helpType == (std::string)"help") std::cout << HelpMessage;
-	else if (helpType == (std::string)"version") std::cout << Version;
-	else if (helpType == (std::string)"path/to/brainfuck/code") std::cout << "You have to enter the actual path of your code";
-	else GetAndRunCode((std::string)argv[1]);
+	if (argv[1] != nullptr)
+	{
+		const std::string helpType = (std::string)argv[1];
+		if (argc != 2 || helpType == (std::string)"help") PrintMessage(HelpMessage);
+		else if (helpType == (std::string)"version") PrintMessage((std::string)"ANFuck v" + Version);
+		else if (helpType == (std::string)"path/to/brainfuck/code") std::cout << "You have to enter the actual path of your code";
+		else GetAndRunCode((std::string)argv[1]);
+	} else PrintMessage(HelpMessage);
 
 #ifdef ANFUCK_DEBUG
 	auto _ = _getch();
