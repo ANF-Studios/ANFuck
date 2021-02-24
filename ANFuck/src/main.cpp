@@ -4,6 +4,8 @@
 
 #include "main.h"
 
+template<typename T>
+void PrintMessage(const T& msg);
 void GetAndRunCode(const std::string& pathToFile);
 
 const char Version[6] = "0.1.0";
@@ -44,3 +46,6 @@ void GetAndRunCode(const std::string& pathToFile) {
 		std::cout << std::endl << e.what() << std::endl;
 	}
 }
+
+template<typename T>
+void PrintMessage(const T& msg) { std::cout << msg; }
