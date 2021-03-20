@@ -1,5 +1,9 @@
 #ifdef ANFUCK_DEBUG
-#include <conio.h>
+	#ifdef _WIN32
+		#include <conio.h>
+	#else
+		#include <iostream>
+	#endif
 #endif
 
 #include "main.h"
@@ -34,7 +38,11 @@ int main(int argc, char* argv[]) {
 	} else PrintMessage(HelpMessage);
 
 #ifdef ANFUCK_DEBUG
-	auto _ = _getch();
+	#ifdef _WIN32
+		auto _ = _getch();
+	#else
+		std::cin.get();
+	#endif
 #endif
 }
 
