@@ -115,6 +115,10 @@ namespace ANFuck {
 					*dataPtr = rand() % 126 + 1;
 					break;
 				}
+				case '*':
+				{
+					// TODO: Think of what this part should do.
+				}
 				default:
 					break;
 			}
