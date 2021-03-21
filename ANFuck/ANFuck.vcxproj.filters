@@ -9,9 +9,15 @@
     <ClInclude Include="src\main.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Transpiler.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transpiler.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
