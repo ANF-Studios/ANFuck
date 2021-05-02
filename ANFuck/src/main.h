@@ -12,9 +12,11 @@ namespace ANFuck {
 		std::string commands;
 		std::ifstream file(filename);
 
-		if (!file.is_open()) throw std::runtime_error("Failed to open '" + filename + "'.");
+		if (!file.is_open())
+			throw std::runtime_error("Failed to open '" + filename + "'.");
 
-		while (file.good()) commands.push_back(file.get());
+		while (file.good()) 
+			commands.push_back(file.get());
 
 		return commands;
 	}
@@ -79,6 +81,7 @@ namespace ANFuck {
 						{
 							if (*instructionPtr == '[')
 								instructionStack.push(instructionPtr);
+
 							else if (*instructionPtr == ']')
 							{
 								if (instructionStack.empty())
@@ -96,10 +99,13 @@ namespace ANFuck {
 				}
 				case ']':
 				{
-					if (instructionStack.empty()) throw std::runtime_error("Found a ']' that did not have a matching '['!");
+					if (instructionStack.empty()) 
+						throw std::runtime_error("Found a ']' that did not have a matching '['!");
 
-					if (*dataPtr != 0) instructionPtr = instructionStack.top();
-					else instructionStack.pop();
+					if (*dataPtr != 0) 
+						instructionPtr = instructionStack.top();
+					else 
+						instructionStack.pop();
 
 					break;
 				}
@@ -114,6 +120,7 @@ namespace ANFuck {
 				}
 				case '*':
 				{
+					// Set the dataPtr to what it was at the beggining
 					*dataPtr = defaultDataPtr;
 					std::cout << *dataPtr;
 				}
