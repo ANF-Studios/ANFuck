@@ -59,6 +59,8 @@ jobs:
 
       - name: Build
         run: |
+          echo "Debug code:"
           pwd
           ls
+          echo "---------------"
           echo "TODO!"
