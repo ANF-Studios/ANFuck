@@ -130,6 +130,7 @@ namespace ANFuck {
 			instructionPtr++;
 		}
 
+
 		if (!instructionStack.empty())
 			throw std::runtime_error("Found a '[' that did not have a matching ']'!");
 	}
