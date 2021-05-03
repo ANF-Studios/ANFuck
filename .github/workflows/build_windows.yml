@@ -1,4 +1,4 @@
-name: MSBuild
+name: Windows MSBuild
 
 on: [push, pull_request]
 
@@ -13,11 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.target_os }}
-    
-    strategy: 
-      matrix:
-        target_os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -25,9 +21,9 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
 
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+    #- name: Restore NuGet packages
+    #  working-directory: ${{env.GITHUB_WORKSPACE}}
+    #  run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
