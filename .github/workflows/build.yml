@@ -39,12 +39,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
-      - run: echo ${{env.GITHUB_WORKSPACE}}
 
       - name: Build
         working-directory: "/home/runner/work/ANFuck/ANFuck/"
         run: |
           cd ANFuck
           mkdir ./__dist
-          g++ src/main.cpp -o __dist/ANFuck.exe -O3 
+          g++ src/main.cpp -o __dist/ANFuck -O3
+          ./__dist/ANFuck
