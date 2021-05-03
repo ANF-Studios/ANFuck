@@ -121,7 +121,7 @@ namespace ANFuck {
 				case '*':
 				{
 					// Set the dataPtr to what it was at the beggining
-					*dataPtr = defaultDataPtr;
+					*dataPtr = *defaultDataPtr;
 				}
 				default:
 					break;
