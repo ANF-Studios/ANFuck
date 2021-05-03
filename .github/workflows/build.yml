@@ -46,4 +46,7 @@ jobs:
           cd ANFuck
           mkdir ./__dist
           g++ src/main.cpp -o __dist/ANFuck -O3
-          ./__dist/ANFuck
+          
+      - name: Run
+        working-directory: "/home/runner/work/ANFuck/ANFuck/ANFuck/__dist"
+        run: ./ANFuck # To verify that it actually runs.
