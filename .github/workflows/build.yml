@@ -43,11 +43,8 @@ jobs:
       - run: echo ${{env.GITHUB_WORKSPACE}}
 
       - name: Build
-        working-directory: "/home/runner/work/ANFuck/ANFuck"
-        # Add additional options to the MSBuild command line here (like platform or verbosity level).
-        # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+        working-directory: "/home/runner/work/ANFuck/ANFuck/"
         run: |
-          pwd
-          ls
+          cd ANFuck
           mkdir ./__dist
           g++ src/main.cpp -o __dist/ANFuck.exe -O3 
