@@ -50,3 +50,15 @@ jobs:
       - name: Run
         working-directory: "/home/runner/work/ANFuck/ANFuck/ANFuck/__dist"
         run: ./ANFuck # To verify that it actually runs.
+        
+  build_macos:
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          pwd
+          ls
+          echo "TODO!"
