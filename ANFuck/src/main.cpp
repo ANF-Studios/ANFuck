@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 }
 
 void GetAndRunCode(const std::string& pathToFile) {
-	try
+    try
 	{
 		std::string commands = ANFuck::LoadFile(pathToFile);
 		ANFuck::ParseCode(commands);

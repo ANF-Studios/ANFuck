@@ -122,7 +122,6 @@ namespace ANFuck {
 				{
 					// Set the dataPtr to what it was at the beggining
 					*dataPtr = defaultDataPtr;
-					std::cout << *dataPtr;
 				}
 				default:
 					break;
